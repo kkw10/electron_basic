@@ -1,0 +1,8 @@
+{
+  "presets": [
+    ["@babel/preset-env", {
+      // error => Regenerator Runtime is not defined
+      "useBuiltIns": "usage"
+    }]
+  ]
+}
