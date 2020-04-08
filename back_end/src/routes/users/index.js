@@ -19,7 +19,7 @@ router.post('/login', (req, res, next) => {
     return next(error);
   }
 
-  next();
+  res.json({ token: password });
 });
 
 router.post('/login', (req, res, next) => {

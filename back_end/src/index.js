@@ -3,6 +3,8 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const io = require('socket.io')();
+const http = require('http');
 
 const headerPrinter = require('./middle/headerPrinter');
 const indexRouter = require('./routes');
@@ -10,6 +12,11 @@ const userRouter = require('./routes/users');
 
 const app = express();
 const port = 1991;
+const server = http.createServer(app);
+
+app.io = io;
+app.io.attach(server);
+app.io.set('transports', ['websocket']);
 
 // view engine setup
 
@@ -30,6 +37,27 @@ app.use((req, res, next) => {
   next(createError(404));
 });
 
+io.use((socket, next) => {
+  const token = socket.handshake.query.token;
+  console.log(`token is ${token}`);
+
+  if (token !== 'kkw123') {
+    return next(new Error('Unauthorized'));
+  }
+
+  next();
+});
+
+io.on('connection', (socket) => {
+  socket.on('hello', (message) => {
+    console.log(message);
+  });
+
+  socket.on('disconnect', (err) => {
+    console.log(err);
+  })
+})
+
 // error handler
 app.use((err, req, res, next) => {
   // set locals, only providing error in development
@@ -42,6 +70,6 @@ app.use((err, req, res, next) => {
   res.send(`${err.status} ${res.locals.error}`);
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`[### Express server is running on ${port}port.]`);
 })
