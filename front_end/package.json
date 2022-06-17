@@ -13,7 +13,7 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
-    "electron": "^8.2.1"
+    "electron": "^15.5.5"
   },
   "dependencies": {
     "axios": "^0.19.2",
